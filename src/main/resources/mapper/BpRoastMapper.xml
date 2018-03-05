@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sohu.bp.roast.dao.mapper.BpRoastMapper" >
+  <resultMap id="BaseResultMap" type="com.sohu.bp.roast.model.BpRoast" >
+    <id column="roast_id" property="roastId" jdbcType="BIGINT" />
+    <result column="focus_id" property="focusId" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="image_urls" property="imageUrls" jdbcType="VARCHAR" />
+    <result column="thumb_up" property="thumbUp" jdbcType="INTEGER" />
+    <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    roast_id, focus_id, content, image_urls, thumb_up, publish_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sohu.bp.roast.model.BpRoastExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bp_roast
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from bp_roast
+    where roast_id = #{roastId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from bp_roast
+    where roast_id = #{roastId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sohu.bp.roast.model.BpRoastExample" >
+    delete from bp_roast
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sohu.bp.roast.model.BpRoast" >
+    insert into bp_roast (roast_id, focus_id, content, 
+      image_urls, thumb_up, publish_time
+      )
+    values (#{roastId,jdbcType=BIGINT}, #{focusId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
+      #{imageUrls,jdbcType=VARCHAR}, #{thumbUp,jdbcType=INTEGER}, #{publishTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sohu.bp.roast.model.BpRoast" >
+    insert into bp_roast
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roastId != null" >
+        roast_id,
+      </if>
+      <if test="focusId != null" >
+        focus_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="imageUrls != null" >
+        image_urls,
+      </if>
+      <if test="thumbUp != null" >
+        thumb_up,
+      </if>
+      <if test="publishTime != null" >
+        publish_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roastId != null" >
+        #{roastId,jdbcType=BIGINT},
+      </if>
+      <if test="focusId != null" >
+        #{focusId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="imageUrls != null" >
+        #{imageUrls,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbUp != null" >
+        #{thumbUp,jdbcType=INTEGER},
+      </if>
+      <if test="publishTime != null" >
+        #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sohu.bp.roast.model.BpRoastExample" resultType="java.lang.Integer" >
+    select count(*) from bp_roast
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update bp_roast
+    <set >
+      <if test="record.roastId != null" >
+        roast_id = #{record.roastId,jdbcType=BIGINT},
+      </if>
+      <if test="record.focusId != null" >
+        focus_id = #{record.focusId,jdbcType=INTEGER},
+      </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imageUrls != null" >
+        image_urls = #{record.imageUrls,jdbcType=VARCHAR},
+      </if>
+      <if test="record.thumbUp != null" >
+        thumb_up = #{record.thumbUp,jdbcType=INTEGER},
+      </if>
+      <if test="record.publishTime != null" >
+        publish_time = #{record.publishTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update bp_roast
+    set roast_id = #{record.roastId,jdbcType=BIGINT},
+      focus_id = #{record.focusId,jdbcType=INTEGER},
+      content = #{record.content,jdbcType=VARCHAR},
+      image_urls = #{record.imageUrls,jdbcType=VARCHAR},
+      thumb_up = #{record.thumbUp,jdbcType=INTEGER},
+      publish_time = #{record.publishTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sohu.bp.roast.model.BpRoast" >
+    update bp_roast
+    <set >
+      <if test="focusId != null" >
+        focus_id = #{focusId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="imageUrls != null" >
+        image_urls = #{imageUrls,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbUp != null" >
+        thumb_up = #{thumbUp,jdbcType=INTEGER},
+      </if>
+      <if test="publishTime != null" >
+        publish_time = #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where roast_id = #{roastId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sohu.bp.roast.model.BpRoast" >
+    update bp_roast
+    set focus_id = #{focusId,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      image_urls = #{imageUrls,jdbcType=VARCHAR},
+      thumb_up = #{thumbUp,jdbcType=INTEGER},
+      publish_time = #{publishTime,jdbcType=TIMESTAMP}
+    where roast_id = #{roastId,jdbcType=BIGINT}
+  </update>
+</mapper>

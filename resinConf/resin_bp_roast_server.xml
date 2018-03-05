@@ -1,0 +1,61 @@
+<resin xmlns="http://caucho.com/ns/resin"
+       xmlns:resin="urn:java:com.caucho.resin">
+    <resin:properties path="${__DIR__}/resin.properties" optional="true"/>
+    <resin:if test="${properties_import_url}">
+        <resin:properties path="${properties_import_url}"
+                          optional="true" recover="true"/>
+    </resin:if>
+    <log-handler name="" level="all" path="stdout:"
+                 timestamp="[%y-%m-%d %H:%M:%S.%s]"
+                 format=" {${thread}} ${log.message}"/>
+    <stdout-log path-format="/opt/logs/resin/bp-roast-server/stdout.log.%Y%m%d" rollover-period="1D"/>
+    <stderr-log path-format="/opt/logs/resin/bp-roast-server/stderr.log.%Y%m%d" rollover-period="1D"/>
+    <logger name="" level="${log_level?:'info'}"/>
+    <logger name="com.caucho.java" level="config"/>
+    <logger name="com.caucho.loader" level="config"/>
+    <resin:import path="${__DIR__}/cluster-default.xml"/>
+    <resin:import path="${__DIR__}/health.xml"/>
+    <cluster-system-key>${cluster_system_key}</cluster-system-key>
+    <dependency-check-interval>${dependency_check_interval?:'2s'}</dependency-check-interval>
+    <home-cluster>${home_cluster}</home-cluster>
+    <home-server>${home_server}</home-server>
+    <elastic-server>${elastic_server}</elastic-server>
+    <elastic-dns>${elastic_dns}</elastic-dns>
+    <cluster id="app2">
+        <server id="bp-roast-server" address="127.0.0.1" port="2003" watchdog-port="2004">
+            <jvm-arg>-Xmx2048m</jvm-arg>
+            <jvm-arg>-Xms2048m</jvm-arg>
+            <jvm-arg>-Xmn1g</jvm-arg>
+            <jvm-arg>-Xss1m</jvm-arg>
+            <jvm-arg>-XX:MaxMetaspaceSize=1024m</jvm-arg>
+            <jvm-arg>-XX:ParallelGCThreads=6</jvm-arg>
+            <jvm-arg>-XX:+UseG1GC</jvm-arg>
+            <jvm-arg>-XX:+UseStringDeduplication</jvm-arg>
+            <jvm-arg>-XX:MaxDirectMemorySize=1024M</jvm-arg>
+            <jvm-arg>-XX:+PrintGCDateStamps</jvm-arg>
+            <jvm-arg>-XX:+PrintGCDetails</jvm-arg>
+            <jvm-arg>-XX:+PrintClassHistogram</jvm-arg>
+            <jvm-arg>-XX:-TraceClassUnloading</jvm-arg>
+            <jvm-arg>-verbose:gc</jvm-arg>
+            <jvm-arg>-Xloggc:/opt/logs/resin/bp-roast-server/gc.log</jvm-arg>
+            <jvm-arg>-XX:-HeapDumpOnOutOfMemoryError</jvm-arg>
+            <jvm-arg>-XX:HeapDumpPath=/opt/logs/resin/bp-roast-server</jvm-arg>
+            <jvm-arg>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=55507</jvm-arg>
+            <jvm-arg>-Dconfig.product=true</jvm-arg>
+            <memory-free-min>1M</memory-free-min>
+            <thread-max>512</thread-max>
+            <socket-timeout>30s</socket-timeout>
+            <keepalive-max>512</keepalive-max>
+            <keepalive-timeout>30s</keepalive-timeout>
+        </server>
+        <server-default>
+            <http port="8083"/>
+        </server-default>
+        <host id="" root-directory=".">
+            <access-log path-format='/opt/logs/resin/bp-roast-server/access.log.%Y%m%d'>
+                <rollover-period>1D</rollover-period>
+            </access-log>
+            <web-app id="/roast" root-directory="/opt/webapp/bpRoast"/>
+        </host>
+    </cluster>
+</resin>
